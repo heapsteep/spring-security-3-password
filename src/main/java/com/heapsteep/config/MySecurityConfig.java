@@ -19,7 +19,6 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-//@EnableMethodSecurity
 public class MySecurityConfig{
 
     @Autowired
@@ -39,8 +38,10 @@ public class MySecurityConfig{
     @Bean
     public SecurityFilterChain mySecurityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/api1","/").authenticated()
-                        .requestMatchers("/api2").permitAll())
+                        .requestMatchers("/api1").hasAnyAuthority("ADMIN")
+                        .requestMatchers("/api2").hasAnyAuthority("HR")
+                        .requestMatchers("/api3").authenticated()
+                        .requestMatchers("/").permitAll())
                 .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults());
         return http.build();
